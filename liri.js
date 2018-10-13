@@ -1,4 +1,5 @@
 require("dotenv").config();
+let fs = require('fs');
 let keys = require('./keys')
 let request = require('request');
 let moment = require('moment')
@@ -37,7 +38,7 @@ function bandsintownRequest(input) {
     request(bandsUrl, function (error, response, body) {
         let events = JSON.parse(body);
         // console.log(body)
-        if(!events.length) {
+        if (!events.length) {
             console.log('\x1b[36m%s\x1b[7m', "No Concerts found!")
         }
 
@@ -49,7 +50,7 @@ function bandsintownRequest(input) {
             console.log('\x1b[36m%s\x1b[7m', moment(element.datetime).format("MM/DD/YYYY, h:mm:ss a"));
         });
 
-        
+
     })
 }
 
@@ -64,8 +65,8 @@ function omdbRequest(input) {
         console.log('\x1b[36m%s\x1b[7m', "___________________________________\n\n");
         console.log('\x1b[36m%s\x1b[7m', "Title: " + movieData.Title + " ");
         console.log('\x1b[36m%s\x1b[7m', "Year: " + movieData.Year + " ");
-        if(movieData.imdbRating) { console.log('\x1b[36m%s\x1b[7m', "imdb Rating: " + movieData.imdbRating + " ") };
-        if(movieData.Ratings[1]){ console.log('\x1b[36m%s\x1b[7m', "Rotten Tomatoes Rating: " + movieData.Ratings[1].Value + " ") }
+        if (movieData.imdbRating) { console.log('\x1b[36m%s\x1b[7m', "imdb Rating: " + movieData.imdbRating + " ") };
+        if (movieData.Ratings[1]) { console.log('\x1b[36m%s\x1b[7m', "Rotten Tomatoes Rating: " + movieData.Ratings[1].Value + " ") }
         console.log('\x1b[36m%s\x1b[7m', "Country: " + movieData.Country + " ");
         console.log('\x1b[36m%s\x1b[7m', "Language: " + movieData.Language + " ");
         console.log('\x1b[36m%s\x1b[7m', "Actors: " + movieData.Actors + " ")
@@ -73,21 +74,79 @@ function omdbRequest(input) {
     })
 }
 
+function runLiri(method, input) {
+
+
+    if (method === "do-what-it-says") {
+        fs.readFile('random.txt', "utf8", (err, data) => {
+            if (err) throw err;
+
+            method = data.split(',')[0];
+            input = data.split(',')[1];
+            // console.log(input)
+            runLiri(method, input)
+        })
+    }
+
+    if (method === "concert-this") {
+        if (!input) {
+            input = "Cage the Elephant"
+            console.log("PLease input a band name!")
+
+            console.log("Looking up concerts for Cage the Elephant: ")
+            setTimeout(() => {
+                bandsintownRequest(input);
+            }, 2000);
+        }
+        console.log("\n\nLooking up concerts for " + input)
+        bandsintownRequest(input)
+    }
+
+    if (method === "spotify-this-song") {
+        // console.log(input)
+
+        if (!input) {
+            input = "I want it that way"
+            console.log("PLease input a song title!")
+            setTimeout(() => {
+                console.log("Showing Results for I want it that way ")
+            }, 2000);
+        }
+
+        console.log("\n\nLooking up " + input)
+        spotifyRequest(input);
+    }
+
+    if (method === "movie-this") {
+        if (!input) {
+            input = "birdman"
+            console.log("Please input a movie title!")
+            setTimeout(() => {
+
+                omdbRequest(input);
+            }, 2000);
+        }
+
+        console.log("\n\nLooking up " + input)
+        omdbRequest(input);
+    }
+
+
+}
+
+//log every command
+let logger = fs.createWriteStream('log.txt', {
+    flags: 'a'
+})
+
 let method = process.argv[2];
 let input = process.argv[3];
+let textToLog = "\n" + method + ", " + input;
+logger.write(textToLog);
 
-if( method === "concert-this") {
-    bandsintownRequest(input);
-}
+runLiri(method, input);
 
-if( method === "spotify-this-song"){
-    spotifyRequest(input);
-}
 
-if( method === "movie-this") {
-    omdbRequest(input);
-}
 
-if( method === "do-what-it-says"){
 
-}
+
