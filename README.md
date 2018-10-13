@@ -4,18 +4,18 @@ LIRI is a Language Interpretation and Recognition Interface. Use Liri to find ou
 
 # **GET STARTED**
 
-# **GET SONG INFO**
+## **GET SONG INFO**
 
 node liri.js spotify-this-song "insert-track-name-here"
 
-# **GET MOVIE INFO**
+## **GET MOVIE INFO**
 
 node liri.js movie-this "insert movie name here"
 
-# **GET CONCERT INFO**
+## **GET CONCERT INFO**
 
 node liri.js concert-this "insert band name here"
 
-# **GET RANDOM INFO**
+## **GET RANDOM INFO**
 
 node liri.js do-what-it-says
