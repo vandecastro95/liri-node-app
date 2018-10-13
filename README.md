@@ -20,7 +20,7 @@ node liri.js do-what-it-says
 
 ## **LOG.TXT**
 
-logs all commands in a txt file
+[logs all commands in a txt file]
 (https://drive.google.com/file/d/1TQFKFMeu9ExbYcFGh1ETZuwo8dSubn01/view?usp=sharing)
 
 [Sample video](https://drive.google.com/file/d/113c_ZmR8rebeo4CbWJA3lkN2_ockJ4Mr/view?usp=sharing)
